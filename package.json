@@ -1,0 +1,17 @@
+{
+  "name": "yahagijs",
+  "version": "0.1.0",
+  "description": "A daemon to connect trojan-redis to sspanel.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Nekogawa",
+  "license": "SEE LICENSE IN EULA.md",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "node-schedule": "^1.3.2",
+    "redis": "^3.0.2"
+  }
+}
