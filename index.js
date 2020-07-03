@@ -66,7 +66,7 @@ const queryTraffic = (sha224uuid, uid) => {
     client.hget(sha224uuid, "upload", (err, res) => {
         let u = res;
         client.hget(sha224uuid, "download", (error, resp) => {
-            if(u === 0 && resp === 0) {
+            if(u == 0 && resp == 0) {
                 return;
             }
             reportTraffic(domain, node_id, key, sha224uuid, uid, u, resp);
