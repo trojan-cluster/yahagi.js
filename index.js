@@ -11,8 +11,16 @@ let node_id = "";
 let key = "";
 
 function schedule_report() {
-    schedule.scheduleJob('30 * * * *', getUserList(domain, node_id, key));
-    schedule.scheduleJob('15 * * * *', reportLoad(domain, node_id, key));
+    schedule.scheduleJob('30 * * * * *', getUserJob);
+    schedule.scheduleJob('15 * * * * *', reportLoadJob);
+}
+
+const getUserJob = () => {
+    getUserList(domain, node_id, key)
+}
+
+const reportLoadJob = () => {
+    reportLoad(domain, node_id, key)
 }
 
 const sha224 = (str) => {
