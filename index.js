@@ -25,7 +25,7 @@ const client = redis.createClient(6379, '127.0.0.1');
 const getUserList = (domain, node_id, key) => {
     const webApiUrl = "https://" +
         domain +
-        "/mod_mu/users?nodeid=" +
+        "/mod_mu/users?node_id=" +
         node_id +
         "&key=" +
         key;
@@ -33,14 +33,14 @@ const getUserList = (domain, node_id, key) => {
 }
 
 const userListCallback = (response) => {
-    const userListEntity = JSON.parse(response).data;
+    const userListEntity = response.data.data;
     let userSet = new Set();
     for (const userEntity of userListEntity) {
         const sha224uuid = sha224(userEntity.uuid.toString());
         userSet.add(sha224uuid);
-        client.hset(sha224uuid, "uid", userEntity.id.toString()).then();
-        client.hincrby(sha224uuid, "upload", 0).then(); // Create Users.
-        client.hincrby(sha224uuid, "download", 0).then();
+        client.hset(sha224uuid, "uid", userEntity.id.toString());
+        client.hincrby(sha224uuid, "upload", 0); // Create Users.
+        client.hincrby(sha224uuid, "download", 0);
         queryTraffic(sha224uuid, userEntity.id);
     }
     // Remove Users.
