@@ -98,7 +98,7 @@ const reportTraffic = (domain, node_id, key, user_sha, uid, upload, download) =>
     axios({
         method: 'POST',
         url: webApiUrl,
-        data: JSON.stringify(log_set)
+        data: log_set
     }).then(() => {
         client.hset(user_sha, "upload", 0);
         client.hset(user_sha, "download", 0);
