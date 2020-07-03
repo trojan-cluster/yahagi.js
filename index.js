@@ -89,7 +89,8 @@ const reportTraffic = (domain, node_id, key, user_sha, uid, upload, download) =>
         node_id +
         "&key=" +
         key;
-    let log_set = [].push({
+    let log_set = []
+    log_set.push({
         'u': upload,
         'd': download,
         'user_id': uid,
