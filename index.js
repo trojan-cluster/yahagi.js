@@ -17,7 +17,7 @@ function schedule_report() {
 
 const sha224 = (str) => {
     const hash = crypto.createHash('sha224');
-    return hash.update(str).digest().toString();
+    return hash.update(str).digest().toString('hex');
 }
 
 const client = redis.createClient(6379, '127.0.0.1');
@@ -44,7 +44,7 @@ const userListCallback = (response) => {
         queryTraffic(sha224uuid, userEntity.id);
     }
     // Remove Users.
-    const deleteUserCallbackW = (keyList) => {
+    const deleteUserCallbackW = (err, keyList) => {
         deleteUserCallback(keyList, userSet);
     }
     client.keys("*", deleteUserCallbackW);
