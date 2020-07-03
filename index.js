@@ -77,7 +77,7 @@ const queryTraffic = (sha224uuid, uid) => {
 const reportTraffic = (domain, node_id, key, user_sha, uid, upload, download) => {
     const webApiUrl = "https://" +
         domain +
-        "/mod_mu/users/traffic?nodeid=" +
+        "/mod_mu/users/traffic?node_id=" +
         node_id +
         "&key=" +
         key;
