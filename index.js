@@ -1,26 +1,20 @@
-const axios = require('axios').default;
+const got = require('got');
 const os = require('os');
 const redis = require('redis');
 const crypto = require('crypto');
 const schedule = require('node-schedule');
 
-// Configure
-
+// Configuration Start
 let domain = process.env.YAHAGI_DOMAIN || "";
 let node_id = process.env.YAHAGI_NODE_ID || "";
 let key = process.env.YAHAGI_NODE_KEY || "";
+// Configuration End
+
+const webApiUrlBase = `https://${domain}/mod_mu`;
 
 function schedule_report() {
     schedule.scheduleJob('30 * * * * *', getUserJob);
     schedule.scheduleJob('15 * * * * *', reportLoadJob);
-}
-
-const getUserJob = () => {
-    getUserList(domain, node_id, key)
-}
-
-const reportLoadJob = () => {
-    reportLoad(domain, node_id, key)
 }
 
 const sha224 = (str) => {
@@ -30,18 +24,13 @@ const sha224 = (str) => {
 
 const client = redis.createClient(6379, '127.0.0.1');
 
-const getUserList = (domain, node_id, key) => {
-    const webApiUrl = "https://" +
-        domain +
-        "/mod_mu/users?node_id=" +
-        node_id +
-        "&key=" +
-        key;
-    axios.get(webApiUrl).then(userListCallback).catch(console.log);
+const getUserJob = () => {
+    const webApiUrl = `${webApiUrlBase}/users?node_id=${node_id}&key=${key}`;
+    got(webApiUrl).then(userListCallback).catch(console.log);
 }
 
 const userListCallback = (response) => {
-    const userListEntity = response.data.data;
+    const userListEntity = response.body.data;
     let userSet = new Set();
     for (const userEntity of userListEntity) {
         const sha224uuid = sha224(userEntity.uuid.toString());
@@ -77,18 +66,13 @@ const queryTraffic = (sha224uuid, uid) => {
             if(u == 0 && resp == 0) {
                 return;
             }
-            reportTraffic(domain, node_id, key, sha224uuid, uid, u, resp);
+            reportTraffic(sha224uuid, uid, u, resp);
         })
     })
 }
 
-const reportTraffic = (domain, node_id, key, user_sha, uid, upload, download) => {
-    const webApiUrl = "https://" +
-        domain +
-        "/mod_mu/users/traffic?node_id=" +
-        node_id +
-        "&key=" +
-        key;
+const reportTraffic = (user_sha, uid, upload, download) => {
+    const webApiUrl = `${webApiUrlBase}/users/traffic?node_id=${node_id}&key=${key}`;
     let log_set = {
         data: []
     }
@@ -97,30 +81,24 @@ const reportTraffic = (domain, node_id, key, user_sha, uid, upload, download) =>
         'd': download,
         'user_id': uid,
     })
-    axios({
-        method: 'POST',
-        url: webApiUrl,
-        data: log_set
+    got.post(webApiUrl, {
+        json: log_set
     }).then(() => {
         client.hset(user_sha, "upload", 0);
         client.hset(user_sha, "download", 0);
     }).catch(console.log);
 }
 
-const reportLoad = (domain, node_id, key) => {
-    const webApiUrl = "https://" +
-        domain +
-        "/mod_mu/nodes/" +
-        node_id +
-        "/info?key=" +
-        key +
-        "&node_id=" +
-        node_id;
+const reportLoadJob = () => {
+    const webApiUrl = `${webApiUrlBase}/nodes/${node_id}/info?key=${key}&node_id=${node_id}`;
+
     const payload = {
         'load': os.loadavg(),
         'uptime': Math.floor(os.uptime()),
     };
-    axios.post(webApiUrl, payload).then(console.log);
+    got.post(webApiUrl, {
+        json: payload
+    }).then(console.log);
 }
 
 schedule_report();
