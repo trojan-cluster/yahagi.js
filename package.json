@@ -1,17 +1,30 @@
 {
   "name": "yahagijs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A daemon to connect trojan-redis to sspanel.",
   "main": "index.js",
+  "bin": {
+    "yahagijs": "./yahagijs"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "Nekogawa",
-  "license": "SEE LICENSE IN EULA.md",
+  "license": "GPL-3.0-or-later",
   "dependencies": {
     "got": "^11.3.0",
     "node-schedule": "^1.3.2",
     "redis": "^3.0.2"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trojan-cluster/yahagi.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/trojan-cluster/yahagi.js/issues"
+  },
+  "homepage": "https://github.com/trojan-cluster/yahagi.js#readme"
 }

@@ -9,11 +9,20 @@ This program make use of sspanel-uim's webapi mode.
 1. Clone this repository to your machine that runs `trojan-cluster`.
     `git clone https://github.com/trojan-cluster/yahagi.js/`
 2. Run `npm install yahagi.js`
-3. Fill the entry in `index.js`.
+3. Fill the entry in `index.js` or see [Environment](#environment).
 4. Make something to run it as a daemon, you can create a systemd service or use pm2. If you don't like these complex things, nohup or screen will work, too.
 
 
 Now it will work.
+
+## Environment
+
+Yahagi.js can make use of environment variable to configure it self:
+```
+YAHAGI_DOMAIN: API domain
+YAHAGI_NODE_ID: Node ID
+YAHAGI_NODE_KEY: Node Key
+```
 
 ## Donation
 

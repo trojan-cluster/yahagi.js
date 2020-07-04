@@ -5,9 +5,9 @@ const crypto = require('crypto');
 const schedule = require('node-schedule');
 
 // Configuration Start
-let domain = "";
-let node_id = "";
-let key = "";
+let domain = process.env.YAHAGI_DOMAIN || "";
+let node_id = process.env.YAHAGI_NODE_ID || "";
+let key = process.env.YAHAGI_NODE_KEY || "";
 // Configuration End
 
 const webApiUrlBase = `https://${domain}/mod_mu`;
