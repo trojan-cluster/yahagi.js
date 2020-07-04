@@ -6,9 +6,9 @@ const schedule = require('node-schedule');
 
 // Configure
 
-let domain = "";
-let node_id = "";
-let key = "";
+let domain = process.env.YAHAGI_DOMAIN || "";
+let node_id = process.env.YAHAGI_NODE_ID || "";
+let key = process.env.YAHAGI_NODE_KEY || "";
 
 function schedule_report() {
     schedule.scheduleJob('30 * * * * *', getUserJob);
