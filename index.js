@@ -30,7 +30,7 @@ const getUserJob = () => {
 }
 
 const userListCallback = (response) => {
-    const userListEntity = response.body.data;
+    const userListEntity = JSON.parse(response.body).data;
     let userSet = new Set();
     for (const userEntity of userListEntity) {
         const sha224uuid = sha224(userEntity.uuid.toString());
