@@ -29,7 +29,20 @@ const getUserJob = () => {
     got(webApiUrl).then(userListCallback).catch(console.log);
 }
 
+let log_set = {
+    data: []
+}
+
+const wipeTrafficSet = () => {
+    console.log("[log] log_set Wiped.")
+    log_set = {
+        data: []
+    };
+}
+
 const userListCallback = (response) => {
+    postTrafficMeter();
+    wipeTrafficSet();
     const userListEntity = JSON.parse(response.body).data;
     let userSet = new Set();
     for (const userEntity of userListEntity) {
@@ -72,26 +85,26 @@ const queryTraffic = (sha224uuid, uid) => {
 }
 
 const reportTraffic = (user_sha, uid, upload, download) => {
-    const webApiUrl = `${webApiUrlBase}/users/traffic?node_id=${node_id}&key=${key}`;
-    let log_set = {
-        data: []
-    }
     log_set.data.push({
         'u': upload,
         'd': download,
         'user_id': uid,
     })
+    client.hset(user_sha, "upload", 0);
+    client.hset(user_sha, "download", 0);
+}
+
+const postTrafficMeter = () => {
+    const webApiUrl = `${webApiUrlBase}/users/traffic?node_id=${node_id}&key=${key}`;
     got.post(webApiUrl, {
         json: log_set
     }).then(() => {
-        client.hset(user_sha, "upload", 0);
-        client.hset(user_sha, "download", 0);
+        console.log("[log] Traffic Posted.")
     }).catch(console.log);
 }
 
 const reportLoadJob = () => {
     const webApiUrl = `${webApiUrlBase}/nodes/${node_id}/info?key=${key}&node_id=${node_id}`;
-
     const payload = {
         'load': os.loadavg(),
         'uptime': Math.floor(os.uptime()),
